@@ -40,6 +40,7 @@ class AuthenticationActivity : AppCompatActivity() {
                 LoginViewModel.AuthenticationState.AUTHENTICATED -> {
                     val intent = Intent(this, RemindersActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
                 else -> Log.e(
                     TAG,
@@ -78,6 +79,7 @@ class AuthenticationActivity : AppCompatActivity() {
                 )
                 val intent = Intent(this, RemindersActivity::class.java)
                 startActivity(intent)
+                finish()
             } else {
                 Log.i(TAG, "Sign in unsuccessful ${response?.error?.errorCode}")
                 Toast.makeText(this, "Something went wrong! Please try again!", Toast.LENGTH_SHORT)
