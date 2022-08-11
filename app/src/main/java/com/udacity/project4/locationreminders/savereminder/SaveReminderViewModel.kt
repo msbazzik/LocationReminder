@@ -79,4 +79,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         }
         return true
     }
+
+    fun askUserToSelectLocation() {
+        showToast.value = app.getString(R.string.select_poi)
+    }
 }

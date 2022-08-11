@@ -65,9 +65,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-//        TODO: add style to the map
-//        TODO: put a marker to location that the user selected
-
+        _viewModel.askUserToSelectLocation()
 
 //        TODO: call this function after the user confirms on the selected location
         onLocationSelected()
