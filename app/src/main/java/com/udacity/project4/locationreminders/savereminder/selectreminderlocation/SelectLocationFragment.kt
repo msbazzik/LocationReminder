@@ -20,10 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -45,6 +42,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private val TAG = RemindersActivity::class.java.simpleName
 
+    private lateinit var selectedPoi :PointOfInterest
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -67,16 +65,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         _viewModel.askUserToSelectLocation()
 
-//        TODO: call this function after the user confirms on the selected location
-        onLocationSelected()
+        binding.saveButton.setOnClickListener { onLocationSelected() }
 
         return binding.root
     }
 
     private fun onLocationSelected() {
-        //        TODO: When the user confirms on the selected location,
-        //         send back the selected location details to the view model
-        //         and navigate back to the previous fragment to save the reminder and add the geofence
+        _viewModel.savePoi(selectedPoi)
     }
 
 
@@ -191,6 +186,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
             binding.saveButton.visibility = View.VISIBLE
+            selectedPoi = poi
             poiMarker.showInfoWindow()
         }
     }

@@ -83,4 +83,10 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     fun askUserToSelectLocation() {
         showToast.value = app.getString(R.string.select_poi)
     }
+
+    fun savePoi(poi: PointOfInterest) {
+        selectedPOI.value = poi
+        navigationCommand.value = NavigationCommand.Back
+        reminderSelectedLocationStr.value = poi.name
+    }
 }
