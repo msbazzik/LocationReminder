@@ -88,5 +88,6 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         selectedPOI.value = poi
         navigationCommand.value = NavigationCommand.Back
         reminderSelectedLocationStr.value = poi.name
+        showToast.value = app.getString(R.string.enterTitleAndDescription)
     }
 }
