@@ -114,6 +114,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         enableMyLocation()
         setMapStyle(map)
+        setPoiClick(map)
     }
 
     private fun isPermissionGranted(): Boolean {
@@ -178,6 +179,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             }
         } catch (e: Resources.NotFoundException) {
             Log.e(TAG, "Can't find style. Error: ", e)
+        }
+    }
+
+    private fun setPoiClick(map: GoogleMap) {
+        map.setOnPoiClickListener { poi ->
+            val poiMarker = map.addMarker(
+                MarkerOptions()
+                    .position(poi.latLng)
+                    .title(poi.name)
+            )
+            poiMarker.showInfoWindow()
         }
     }
 }
