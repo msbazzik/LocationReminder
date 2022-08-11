@@ -189,6 +189,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .title(poi.name)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
+            binding.saveButton.visibility = View.VISIBLE
             poiMarker.showInfoWindow()
         }
     }
