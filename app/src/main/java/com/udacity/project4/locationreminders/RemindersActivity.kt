@@ -90,8 +90,10 @@ class RemindersActivity : AppCompatActivity() {
     private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
         val foregroundLocationApproved = (
                 PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION))
+                        ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ))
         val backgroundPermissionApproved =
             if (runningQOrLater) {
                 PackageManager.PERMISSION_GRANTED ==
@@ -104,7 +106,7 @@ class RemindersActivity : AppCompatActivity() {
         return foregroundLocationApproved && backgroundPermissionApproved
     }
 
-    @TargetApi(29 )
+    @TargetApi(29)
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved())
             return
@@ -135,8 +137,8 @@ class RemindersActivity : AppCompatActivity() {
             grantResults[LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
             (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
                     grantResults[BACKGROUND_LOCATION_PERMISSION_INDEX] ==
-                    PackageManager.PERMISSION_DENIED))
-        {
+                    PackageManager.PERMISSION_DENIED)
+        ) {
             Snackbar.make(
                 this.nav_host_fragment.requireView(),
                 R.string.permission_denied_explanation,
@@ -154,7 +156,7 @@ class RemindersActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkDeviceLocationSettingsAndStartGeofence(resolve:Boolean = true) {
+    private fun checkDeviceLocationSettingsAndStartGeofence(resolve: Boolean = true) {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }
@@ -163,10 +165,12 @@ class RemindersActivity : AppCompatActivity() {
         val locationSettingsResponseTask =
             settingsClient.checkLocationSettings(builder.build())
         locationSettingsResponseTask.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException && resolve){
+            if (exception is ResolvableApiException && resolve) {
                 try {
-                    exception.startResolutionForResult(this@RemindersActivity,
-                        REQUEST_TURN_DEVICE_LOCATION_ON)
+                    exception.startResolutionForResult(
+                        this@RemindersActivity,
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
                 } catch (sendEx: IntentSender.SendIntentException) {
                     Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
                 }
@@ -179,15 +183,16 @@ class RemindersActivity : AppCompatActivity() {
                 }.show()
             }
         }
-        locationSettingsResponseTask.addOnCompleteListener {
-            if ( it.isSuccessful ) {
-                addGeofence()
-            }
-        }    }
-
-    private fun addGeofence() {
-//        TODO("Not yet implemented")
+//        locationSettingsResponseTask.addOnCompleteListener {
+//            if ( it.isSuccessful ) {
+//                addGeofence()
+//            }
+//        }
     }
+
+//    private fun addGeofence() {
+////        TODO("Not yet implemented")
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
