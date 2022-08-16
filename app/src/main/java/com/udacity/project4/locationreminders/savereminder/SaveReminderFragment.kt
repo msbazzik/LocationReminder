@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
@@ -70,26 +69,27 @@ class SaveReminderFragment : BaseFragment() {
             val latitude = _viewModel.latitude.value
             val longitude = _viewModel.longitude.value
 
+            val reminderDataItem = ReminderDataItem(
+                title,
+                description,
+                location,
+                latitude,
+                longitude
+            )
             _viewModel.validateAndSaveReminder(
-                ReminderDataItem(
-                    title,
-                    description,
-                    location,
-                    latitude,
-                    longitude
-                )
+                reminderDataItem
             )
 
-            addGeofence()
+            addGeofence(reminderDataItem.id)
         }
     }
 
     @SuppressLint("MissingPermission")
-    private fun addGeofence() {
+    private fun addGeofence(id : String) {
         val latLog = _viewModel.selectedPOI.value?.latLng
         if (latLog != null) {
             val geofence = Geofence.Builder()
-                .setRequestId(_viewModel.selectedPOI.value?.placeId)
+                .setRequestId(id)
                 .setCircularRegion(
                     latLog.latitude,
                     latLog.longitude,
@@ -107,18 +107,9 @@ class SaveReminderFragment : BaseFragment() {
 
             geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
                 addOnSuccessListener {
-//                    Toast.makeText(
-//                        requireActivity(), R.string.geofence_entered,
-//                        Toast.LENGTH_LONG
-//                    )
-//                        .show()
                     Log.e("Add Geofence", geofence.requestId)
                 }
                 addOnFailureListener {
-//                    Toast.makeText(
-//                        requireActivity(), R.string.geofences_not_added,
-//                        Toast.LENGTH_LONG
-//                    ).show()
                     if ((it.message != null)) {
                         Log.w(TAG, it.message!!)
                     }
