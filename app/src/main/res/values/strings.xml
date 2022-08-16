@@ -45,4 +45,5 @@
         Unknown error: the Geofence service is not available now
     </string>
     <string name="geofence_transition_invalid_type">Geofence Transition Invalid Type: %d</string>
+    <string name="location_image">Location_image</string>
 </resources>
