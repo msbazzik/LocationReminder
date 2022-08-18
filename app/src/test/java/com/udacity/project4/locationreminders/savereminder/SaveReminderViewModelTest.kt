@@ -10,9 +10,9 @@ import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.nullValue
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -89,7 +89,7 @@ class SaveReminderViewModelTest {
     @Test
     fun onClear() {
         // Given a Point of Interest to save in the viewModel livedata
-        val poi =  PointOfInterest(
+        val poi = PointOfInterest(
             LatLng(37.4222359923114, -122.08400387119623),
             "0002",
             "googleplex"
@@ -100,18 +100,23 @@ class SaveReminderViewModelTest {
         saveReminderViewModel.onClear()
 
         // Then viewModel's livedata is all null
-        assertThat(saveReminderViewModel.selectedPOI.getOrAwaitValue(), `is`(Matchers.nullValue()))
-        assertThat(saveReminderViewModel.reminderSelectedLocationStr.getOrAwaitValue(), `is`(Matchers.nullValue()))
-        assertThat(saveReminderViewModel.reminderTitle.getOrAwaitValue(), `is`(Matchers.nullValue()))
-        assertThat(saveReminderViewModel.latitude.getOrAwaitValue(), `is`(Matchers.nullValue()))
+        assertThat(saveReminderViewModel.selectedPOI.getOrAwaitValue(), `is`(nullValue()))
+        assertThat(
+            saveReminderViewModel.reminderSelectedLocationStr.getOrAwaitValue(),
+            `is`(nullValue())
+        )
+        assertThat(saveReminderViewModel.reminderTitle.getOrAwaitValue(), `is`(nullValue()))
+        assertThat(saveReminderViewModel.latitude.getOrAwaitValue(), `is`(nullValue()))
     }
 
     @Test
     fun savePoi() {
         // Given a Point of Interest
-        val poi =  PointOfInterest(
-            LatLng(-34.0,
-                151.0),
+        val poi = PointOfInterest(
+            LatLng(
+                -34.0,
+                151.0
+            ),
             "0001",
             "sydney"
         )
