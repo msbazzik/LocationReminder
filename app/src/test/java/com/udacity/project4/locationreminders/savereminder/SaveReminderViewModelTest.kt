@@ -11,8 +11,7 @@ import com.udacity.project4.locationreminders.getOrAwaitValue
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.nullValue
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -126,5 +125,17 @@ class SaveReminderViewModelTest {
 
         // Then viewModel's livedata is updated
         assertThat(saveReminderViewModel.selectedPOI.getOrAwaitValue(), `is`(poi))
+    }
+
+    @Test
+    fun saveReminder_loaderAndToastUpdated() {
+        //When save an item to database
+        saveReminderViewModel.saveReminder(reminderDataItem1)
+
+        // Then viewModel's livedata is updated
+        val loader = saveReminderViewModel.showLoading.getOrAwaitValue()
+        val toast = saveReminderViewModel.showToast.getOrAwaitValue()
+        assertThat(loader, `is`(false))
+        assertThat(toast, `is`("Reminder Saved !"))
     }
 }

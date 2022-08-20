@@ -3,7 +3,11 @@ package com.udacity.project4.locationreminders.reminderslist
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.data.FakeDataSource
+import com.udacity.project4.locationreminders.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -30,12 +34,12 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun invalidateShowNoData_EmptyList() {
-//        // Given an empty remindersList and check if no data has to be shown
-//        remindersListViewModel.loadReminders()
-//        remindersListViewModel.remindersList.value = arrayListOf()
-//
-//        // Then there is false returned and snackBar is set to error message
-//        assertThat(remindersListViewModel.showNoData.getOrAwaitValue(), `is`(true))
+    fun invalidateShowNoData_EmptyList() = runBlockingTest {
+        // Given an empty remindersList and check if no data has to be shown
+        dataSource.deleteAllReminders()
+        remindersListViewModel.loadReminders()
+
+        // Then there is false returned and snackBar is set to error message
+        assertThat(remindersListViewModel.showNoData.getOrAwaitValue(), `is`(true))
     }
 }
