@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
+import com.udacity.project4.locationreminders.MainCoroutineRule
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
@@ -30,6 +31,8 @@ class SaveReminderViewModelTest {
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setupViewModel() {
@@ -128,14 +131,21 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun saveReminder_loaderAndToastUpdated() {
+    fun saveReminder_checkLoadingAndToastUpdated() {
+        // Pause dispatcher so you can verify initial values.
+        mainCoroutineRule.pauseDispatcher()
+
         //When save an item to database
         saveReminderViewModel.saveReminder(reminderDataItem1)
 
-        // Then viewModel's livedata is updated
-        val loader = saveReminderViewModel.showLoading.getOrAwaitValue()
-        val toast = saveReminderViewModel.showToast.getOrAwaitValue()
-        assertThat(loader, `is`(false))
-        assertThat(toast, `is`("Reminder Saved !"))
+        // Then assert that the progress indicator is shown.
+        assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(true))
+
+        // Execute pending coroutines actions.
+        mainCoroutineRule.resumeDispatcher()
+
+        // Then viewModel's livedata is back to false
+        assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(false))
+        assertThat(saveReminderViewModel.showToast.getOrAwaitValue(), `is`("Reminder Saved !"))
     }
 }

@@ -42,4 +42,14 @@ class RemindersListViewModelTest {
         // Then there is false returned and snackBar is set to error message
         assertThat(remindersListViewModel.showNoData.getOrAwaitValue(), `is`(true))
     }
+
+    @Test
+    fun loadReminders_shouldReturnError() {
+        // Make the repository return errors.
+        dataSource.setReturnError(true)
+        remindersListViewModel.loadReminders()
+
+        //Then snackBar is updated
+        assertThat(remindersListViewModel.showSnackBar.getOrAwaitValue(), `is`("Test exception"))
+    }
 }
