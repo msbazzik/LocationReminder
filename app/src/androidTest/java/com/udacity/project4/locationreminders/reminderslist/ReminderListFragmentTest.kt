@@ -3,9 +3,11 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
@@ -30,7 +32,7 @@ import org.koin.test.get
 @ExperimentalCoroutinesApi
 //UI Testing
 @MediumTest
-class ReminderListFragmentTest: AutoCloseKoinTest()  {
+class ReminderListFragmentTest : AutoCloseKoinTest() {
 
     private lateinit var dataSource: ReminderDataSource
     private lateinit var appContext: Application
@@ -64,7 +66,6 @@ class ReminderListFragmentTest: AutoCloseKoinTest()  {
     }
 
 //    TODO: test the navigation of the fragments.
-//    TODO: test the displayed data on the UI.
 //    TODO: add testing for the error messages.
 
     @Test
@@ -91,18 +92,22 @@ class ReminderListFragmentTest: AutoCloseKoinTest()  {
 
             // WHEN - ReminderList Fragment launched
             launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
-            Thread.sleep(2000)
+
             //Then two reminders are displayed
-
             onView(withId(R.id.reminderssRecyclerView)).check(matches(isDisplayed()))
-//        onView(withId(R.id.title)).check(
-//            matches(
-//                withText(
-//                    "title1"
-//                )
-//            )
-//        )
-        }
+            onView(withId(R.id.reminderssRecyclerView))
+                .perform(
+                    RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                        hasDescendant(withText("title1"))
+                    )
+                )
 
+            onView(withId(R.id.reminderssRecyclerView))
+                .perform(
+                    RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                        hasDescendant(withText("description2"))
+                    )
+                )
+        }
     }
 }
