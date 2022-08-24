@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders.reminderslist
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.udacity.project4.locationreminders.MainCoroutineRule
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,6 +11,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
@@ -20,6 +22,9 @@ class RemindersListViewModelTest {
 
     private lateinit var remindersListViewModel: RemindersListViewModel
     private lateinit var dataSource: FakeDataSource
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setupViewModel() {
@@ -34,7 +39,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun invalidateShowNoData_EmptyList() = runBlockingTest {
+    fun invalidateShowNoData_EmptyList() = mainCoroutineRule.runBlockingTest {
         // Given an empty remindersList and check if no data has to be shown
         dataSource.deleteAllReminders()
         remindersListViewModel.loadReminders()
