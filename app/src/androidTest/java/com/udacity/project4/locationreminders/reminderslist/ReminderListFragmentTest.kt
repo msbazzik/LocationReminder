@@ -3,9 +3,12 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -27,6 +30,8 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.get
+import org.mockito.Mockito
+import org.mockito.Mockito.verify
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
@@ -65,7 +70,27 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         }
     }
 
-//    TODO: test the navigation of the fragments.
+    @Test
+    fun clickFab_navigateToSaveReminderFragment() {
+        // GIVEN - On the reminderList screen
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+
+        val navController = Mockito.mock(NavController::class.java)
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
+        }
+
+        // WHEN - Click on the FAB
+        onView(withId(R.id.addReminderFAB))
+            .perform(click())
+
+        // THEN - Verify that we navigate to the Save Reminder Screen
+        verify(navController).navigate(
+            ReminderListFragmentDirections.toSaveReminder()
+        )
+    }
+
+
 //    TODO: add testing for the error messages.
 
     @Test
