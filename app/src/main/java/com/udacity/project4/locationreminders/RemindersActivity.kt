@@ -183,16 +183,7 @@ class RemindersActivity : AppCompatActivity() {
                 }.show()
             }
         }
-//        locationSettingsResponseTask.addOnCompleteListener {
-//            if ( it.isSuccessful ) {
-//                addGeofence()
-//            }
-//        }
     }
-
-//    private fun addGeofence() {
-////        TODO("Not yet implemented")
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
