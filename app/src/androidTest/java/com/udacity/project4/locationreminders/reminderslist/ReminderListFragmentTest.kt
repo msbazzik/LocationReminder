@@ -90,9 +90,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         )
     }
 
-
-//    TODO: add testing for the error messages.
-
     @Test
     fun displayReminderList_twoRemindersDisplayed() {
         // GIVEN two reminders
@@ -133,6 +130,40 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
                         hasDescendant(withText("description2"))
                     )
                 )
+        }
+    }
+
+    @Test
+    fun getReminderList_errorShown() {
+        reminder1 = ReminderDTO(
+            "title1",
+            "description1",
+            "location3",
+            -30.0,
+            150.0
+        )
+        reminder2 = ReminderDTO(
+            "title2",
+            "description2",
+            "location3",
+            -34.0,
+            151.0
+        )
+        runBlockingTest {
+            dataSource.saveReminder(reminder1)
+            dataSource.saveReminder(reminder2)
+
+            (dataSource as AndroidFakeDataSource).setReturnError(true)
+
+
+            // WHEN - ReminderList Fragment launched
+            launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+
+            //Then Error snackBar is updated
+            onView(withId(R.id.snackbar_text)).check(matches(isDisplayed()))
+
+            onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText("Test exception")))
         }
     }
 }
