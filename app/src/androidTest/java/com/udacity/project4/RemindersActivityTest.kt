@@ -104,24 +104,27 @@ class RemindersActivityTest :
 
 
     @Test
-    fun saveReminder() {
+    fun saveReminderifAuthenticated_snackBarShown() {
         // start up Reminders screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
         val viewModel = dataBindingIdlingResource.activity.getViewModel<LoginViewModel>()
 
-//        // Add a reminder
-//        onView(withId(R.id.addReminderFAB)).perform(click())
-//        onView(withId(R.id.reminderTitle)).perform(typeText("TITLE1"))
-//        onView(withId(R.id.reminderDescription))
-//            .perform(typeText("DESCRIPTION"))
-//        onView(ViewMatchers.isRoot()).perform(closeSoftKeyboard())
-//        onView(withId(R.id.saveReminder)).perform(click())
-//
-//        //SnackBar message asks to add a location
-//        onView(withId(com.google.android.material.R.id.snackbar_text))
-//            .check(ViewAssertions.matches(ViewMatchers.withText("Please select location")))
+        if (viewModel.authenticationState.value == LoginViewModel.AuthenticationState.AUTHENTICATED) {
+
+            // Add a reminder
+            onView(withId(R.id.addReminderFAB)).perform(click())
+            onView(withId(R.id.reminderTitle)).perform(typeText("TITLE1"))
+            onView(withId(R.id.reminderDescription))
+                .perform(typeText("DESCRIPTION"))
+            onView(ViewMatchers.isRoot()).perform(closeSoftKeyboard())
+            onView(withId(R.id.saveReminder)).perform(click())
+
+            //SnackBar message asks to add a location
+            onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(ViewAssertions.matches(ViewMatchers.withText("Please select location")))
+        }
 
     }
 }
