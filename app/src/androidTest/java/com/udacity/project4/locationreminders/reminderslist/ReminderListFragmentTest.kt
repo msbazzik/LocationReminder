@@ -159,9 +159,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             // WHEN - ReminderList Fragment launched
             launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
 
-            //Then Error snackBar is updated
-            onView(withId(R.id.snackbar_text)).check(matches(isDisplayed()))
-
             onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(matches(withText("Test exception")))
         }
