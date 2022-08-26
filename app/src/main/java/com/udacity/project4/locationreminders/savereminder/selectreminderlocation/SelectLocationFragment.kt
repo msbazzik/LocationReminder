@@ -24,6 +24,7 @@ import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
+import java.util.*
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -100,6 +101,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         enableMyLocation()
         setMapStyle(map)
         setPoiClick(map)
+        setMapLongClick(map)
     }
 
     private fun isPermissionGranted(): Boolean {
@@ -178,6 +180,32 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             binding.saveButton.visibility = View.VISIBLE
             selectedPoi = poi
             poiMarker.showInfoWindow()
+        }
+    }
+
+    private fun setMapLongClick(map: GoogleMap) {
+        map.setOnMapLongClickListener { latLng ->
+            map.clear()
+            // A Snippet is Additional text that's displayed below the title.
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                latLng.latitude,
+                latLng.longitude
+            )
+            val selectedLocation = map.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .title(getString(R.string.dropped_pin))
+                    .snippet(snippet)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+            )
+            binding.saveButton.visibility = View.VISIBLE
+            selectedPoi = PointOfInterest(
+                LatLng(selectedLocation.position.latitude, selectedLocation.position.longitude),
+                selectedLocation.id,
+                selectedLocation.snippet
+            )
         }
     }
 }
