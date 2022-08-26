@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.data.local
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -9,10 +10,12 @@ import com.udacity.project4.locationreminders.data.dto.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -24,6 +27,10 @@ class RemindersLocalRepositoryTest {
 
     private lateinit var dataSource: RemindersLocalRepository
     private lateinit var database: RemindersDatabase
+
+    // Executes each task synchronously using Architecture Components.
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setup() {
@@ -64,5 +71,17 @@ class RemindersLocalRepositoryTest {
         assertThat(result.data.title, `is`(reminder.title))
         assertThat(result.data.description, `is`(reminder.description))
         assertThat(result.data.location, `is`(reminder.location))
+    }
+
+    @Test
+    fun getReminder_noExistedReminder_returnsNotFound() = runBlocking{
+        // GIVEN
+
+        // WHEN a dummy reminder retrieved by id.
+        val result = dataSource.getReminder("dummy") as Result.Error
+
+        // THEN error message is returned
+        assertThat(result.message, `is`("Reminder not found!"))
+
     }
 }
