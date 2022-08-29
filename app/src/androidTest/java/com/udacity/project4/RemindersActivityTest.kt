@@ -1,5 +1,6 @@
 package com.udacity.project4
 
+import android.app.Activity
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
@@ -7,7 +8,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -22,6 +25,7 @@ import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -104,7 +108,7 @@ class RemindersActivityTest :
 
 
     @Test
-    fun saveReminderifAuthenticated_snackBarShown() {
+    fun saveReminderIfAuthenticated_snackBarShown() {
         // start up Reminders screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
@@ -124,7 +128,47 @@ class RemindersActivityTest :
             //SnackBar message asks to add a location
             onView(withId(com.google.android.material.R.id.snackbar_text))
                 .check(ViewAssertions.matches(ViewMatchers.withText("Please select location")))
+
+            activityScenario.close()
+        }
+    }
+
+    @Test
+    fun saveReminderifAuthenticated_ToastShown() = runBlocking {
+        // start up Reminders screen
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        var activity: Activity? = null
+        activityScenario.onActivity {
+            activity = it
         }
 
+        val viewModel = dataBindingIdlingResource.activity.getViewModel<LoginViewModel>()
+
+        if (viewModel.authenticationState.value == LoginViewModel.AuthenticationState.AUTHENTICATED) {
+            // Add a reminder
+            onView(withId(R.id.addReminderFAB)).perform(click())
+            onView(withId(R.id.reminderTitle)).perform(typeText("TITLE1"))
+            onView(withId(R.id.reminderDescription))
+                .perform(typeText("DESCRIPTION"))
+            onView(ViewMatchers.isRoot()).perform(closeSoftKeyboard())
+
+
+            onView(withId(R.id.selectLocation)).perform(click())
+            onView(withContentDescription("Google Map")).perform(longClick())
+            onView(withId(R.id.save_button)).perform(click())
+
+            onView(withId(R.id.saveReminder)).perform(click())
+
+            onView(ViewMatchers.withText(R.string.reminder_saved)).inRoot(
+                withDecorView(
+                    not(activity?.window?.decorView)
+                )
+            )
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        }
+        // When using ActivityScenario.launch, always call close()
+        activityScenario.close()
     }
 }
