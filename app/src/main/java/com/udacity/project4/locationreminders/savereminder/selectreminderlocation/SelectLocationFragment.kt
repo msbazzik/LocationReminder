@@ -59,8 +59,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        _viewModel.askUserToSelectLocation()
-
         binding.saveButton.setOnClickListener { onLocationSelected() }
 
         return binding.root
@@ -177,7 +175,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .title(poi.name)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
-            binding.saveButton.visibility = View.VISIBLE
+            binding.saveButton.text = getString(R.string.save)
+            binding.saveButton.setBackgroundColor(getResources().getColor(R.color.colorAccent))
             selectedPoi = poi
             poiMarker.showInfoWindow()
         }
@@ -200,7 +199,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .snippet(snippet)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
-            binding.saveButton.visibility = View.VISIBLE
+            binding.saveButton.text = getString(R.string.save)
+            binding.saveButton.setBackgroundColor(getResources().getColor(R.color.colorAccent))
             selectedPoi = PointOfInterest(
                 LatLng(selectedLocation.position.latitude, selectedLocation.position.longitude),
                 selectedLocation.id,
