@@ -171,4 +171,69 @@ class RemindersActivityTest :
         // When using ActivityScenario.launch, always call close()
         activityScenario.close()
     }
+
+
+    @Test
+    fun saveReminder_pressSave_enterTitleSnackBarShown() = runBlocking {
+        // start up Reminders screen
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        var activity: Activity? = null
+        activityScenario.onActivity {
+            activity = it
+        }
+
+        val viewModel = dataBindingIdlingResource.activity.getViewModel<LoginViewModel>()
+
+        if (viewModel.authenticationState.value == LoginViewModel.AuthenticationState.AUTHENTICATED) {
+            // Add a reminder
+            onView(withId(R.id.addReminderFAB)).perform(click())
+
+            onView(withId(R.id.saveReminder)).perform(click())
+
+            //SnackBar message asks to enter a title
+            onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(ViewAssertions.matches(ViewMatchers.withText("Please enter title")))
+
+        }
+        // When using ActivityScenario.launch, always call close()
+        activityScenario.close()
+    }
+
+    @Test
+    fun saveReminder_locationEntered_toastEnterRemindersDetailsShown() = runBlocking {
+        // start up Reminders screen
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        var activity: Activity? = null
+        activityScenario.onActivity {
+            activity = it
+        }
+
+        val viewModel = dataBindingIdlingResource.activity.getViewModel<LoginViewModel>()
+
+        if (viewModel.authenticationState.value == LoginViewModel.AuthenticationState.AUTHENTICATED) {
+            // Add a reminder
+            onView(withId(R.id.addReminderFAB)).perform(click())
+
+            onView(withId(R.id.selectLocation)).perform(click())
+            onView(withContentDescription("Google Map")).perform(longClick())
+            onView(withId(R.id.save_button)).perform(click())
+
+            onView(withId(R.id.saveReminder)).perform(click())
+
+            //Toast to ask user to enter reminder's details shown
+            onView(ViewMatchers.withText(R.string.enterTitleAndDescription)).inRoot(
+                withDecorView(
+                    not(activity?.window?.decorView)
+                )
+            )
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        }
+        // When using ActivityScenario.launch, always call close()
+        activityScenario.close()
+    }
 }
