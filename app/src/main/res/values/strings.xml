@@ -31,6 +31,7 @@
     <string name="select_location">Please select location</string>
     <string name="enterTitleAndDescription">To save a reminder with selected location please enter reminder\'s name and details</string>
     <string name="geofences_not_added">Problem in adding geofences.</string>
+    <string name="geofences_added">Geofences Added.</string>
     <string name="welcome">Welcome</string>
     <string name="err_enter_title">Please enter title</string>
     <string name="err_select_location">Please select location</string>
