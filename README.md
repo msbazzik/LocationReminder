@@ -1,6 +1,5 @@
-# Location Reminder
 
-Location Reminder is an Android Kotlin app which represents a TODO list with location reminders that
+[Location Reminder](https://github.com/msbazzik/LocationReminder) is an Android Kotlin app which represents a TODO list with location reminders that
 remind the user to do something when the user is at a specific location. The app will require the
 user to create an account and login to set and access reminders.
 
